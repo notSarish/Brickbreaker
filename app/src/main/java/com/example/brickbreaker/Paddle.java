@@ -9,10 +9,32 @@ public class Paddle implements GameObject {
 
     private Rect paddle;
     private int color;
+    private int circleRadius = 50;
+    private Point circlePos = new Point(100, 100);
 
     public Paddle(Rect rectangle, int color) {
         this.paddle = rectangle;
         this.color = color;
+    }
+
+    public int getLeft() {
+        return paddle.left;
+    }
+    public int getRight() {
+        return paddle.right;
+    }
+    public int getTop() {
+        return paddle.top;
+    }
+    public int getBottom() {
+        return paddle.bottom;
+    }
+
+    public int getWidth() {
+        return paddle.width();
+    }
+    public int getHeight() {
+        return paddle.height();
     }
 
     @Override
@@ -20,6 +42,7 @@ public class Paddle implements GameObject {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawRect(paddle, paint);
+//        canvas.drawCircle(circlePos.x, circlePos.y, circleRadius, paint);
     }
 
     @Override
