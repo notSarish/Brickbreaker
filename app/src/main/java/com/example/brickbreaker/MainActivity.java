@@ -1,3 +1,4 @@
+package com.example.brickbreaker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
