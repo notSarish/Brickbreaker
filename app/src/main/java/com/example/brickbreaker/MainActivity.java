@@ -1,38 +1,53 @@
-package com.example.brickbreaker;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Color;
+
+
+import static android.view.Window.FEATURE_NO_TITLE;
+//import android.widget.Button;
+//import android.widget.LinearLayout;
 
 public class MainActivity extends Activity {
-
+    private Canvas canvas = new Canvas();
+    private Color color = new Color();
+    DrawView drawView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(new GamePanel(this));
 
-//        setContentView(R.layout.activity_main);
-//        Button normal = (Button) findViewById(R.id.playNormal);
-//        View.OnClickListener handler = new View.OnClickListener(){
-//            public void onClick(View v) {
-//                Intent normalIntent = new Intent(MainActivity.this, NormalModeActivity.class);
-//                MainActivity.this.startActivity(normalIntent);
-//            }
-//        };
-//        normal.setOnClickListener(handler);
+
+        super.onCreate(savedInstanceState);
+        drawView = new DrawView(this);
+        drawView.setBackgroundColor(Color.WHITE);
+        setContentView(drawView);
+
+
+
     }
-//
-//    private void normalModeClickHandler() {
-//        Intent normalIntent = new Intent(MainActivity.this, NormalMode.class);
-//        MainActivity.this.startActivity(normalIntent);
-//    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+        if (x >= 0 && x <= 1500 && y >= 200 && y <= 350) {
+          //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+           // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(new GamePanel(this));
+            return true;
+        }
+        return false;
+    }
+
+
 }
