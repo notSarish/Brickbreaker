@@ -100,10 +100,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         }
         return true;
-     }
-
-     private void movePlayer(MotionEvent event) {
-
+    }
+    private void movePlayer(MotionEvent event) {
         int paddleXpos;
 
         if (event.getX() - player.getWidth()/2 < 0) {
@@ -114,17 +112,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             paddleXpos = (int) event.getX();
         }
 
-
         playerPoint.set(paddleXpos, 1500);
 //        playerPoint.set((int) event.getX(), 1500);
-     }
+    }
 
-
-
-     public void update() {
-
+    public void update() {
         player.update(playerPoint);
-     }
+    }
 
      @Override
     public void draw(Canvas canvas) {
@@ -140,8 +134,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         if (circleYpos - circleRadius <= topBound || circleYpos + circleRadius >= bottomBound) {
             dy *= -1;
         }
-//        Pair<Boolean>
-//        System.out.println("X: " + circleXpos + " Y: " + circleYpos);
+//        Pair<Boolean, Integer> collisionResults = boxCircleCollision(playerPoint.x, playerPoint.y, player.getWidth(), player.getHeight(), circleXpos, circleYpos, circleRadius);
+//        Boolean collision = collisionResults.first;
+//        Integer side = collisionResults.second;
+//        if (collision && side > 0) {
+//            if (side == 5) {
+//                dx *= -1;
+//                dy *= -1;
+//            } else if (side == 1 || side == 3) {
+//                dy *= -1;
+//            } else if (side == 2 || side == 4) {
+//                dx *= -1;
+//            }
+//        }
+        System.out.println("X: " + circleXpos + " Y: " + circleYpos + " dx: " + dx + " dy: " + dy);
         circleXpos += dx;
         circleYpos += dy;
         canvas.drawCircle(circleXpos, circleYpos, circleRadius, paint);
@@ -149,34 +155,34 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player.draw(canvas);
     }
 
-    public Pair<Boolean, Integer> boxCircleCollision(int boxX, int boxY, int boxWidth, int boxHeight, int circleX, int circleY, int circleRadius) {
-        int closeX = circleX;
-        int closeY = circleY;
-        Integer side = 1;
-
-        if (circleY < boxY) {
-            closeY = boxY;
-            side = 1;
-        }
-        if (circleX > boxX + boxWidth) {
-            closeX = boxX + boxWidth;
-            side = 2;
-        }
-        if (circleY > boxY + boxHeight) {
-            closeY = boxY + boxHeight;
-            side = 3;
-        }
-        if (circleX < boxX) {
-            closeX = boxX;
-            side = 4;
-        }
-        if (closeX == boxX && closeY == boxY || closeX == boxX + boxWidth && closeY == boxY || closeX == boxX && closeY == boxY + boxHeight || closeX == boxX + boxWidth && closeY == boxY + boxHeight) {
-            side = 5;
-        }
-        double distance = Math.sqrt(Math.pow(closeX - circleX, 2) + Math.pow(closeY - circleY, 2));
-        Pair<Boolean, Integer> pair = new Pair((distance < circleRadius), side);
-        return pair;
-    }
+//    public Pair<Boolean, Integer> boxCircleCollision(int boxX, int boxY, int boxWidth, int boxHeight, int circleX, int circleY, int circleRadius) {
+//        int closeX = circleX;
+//        int closeY = circleY;
+//        Integer side = -1;
+//
+//        if (circleY + circleRadius < boxY + boxHeight/2) {
+//            closeY = boxY;
+//            side = 1;
+//        }
+//        if (circleX - circleRadius > boxX + boxWidth/2) {
+//            closeX = boxX + boxWidth;
+//            side = 2;
+//        }
+//        if (circleY - circleRadius > boxY + boxHeight/2) {
+//            closeY = boxY + boxHeight;
+//            side = 3;
+//        }
+//        if (circleX + circleRadius < boxX - boxWidth/2) {
+//            closeX = boxX;
+//            side = 4;
+//        }
+//        if (closeX == boxX && closeY == boxY || closeX == boxX + boxWidth && closeY == boxY || closeX == boxX && closeY == boxY + boxHeight || closeX == boxX + boxWidth && closeY == boxY + boxHeight) {
+//            side = 5;
+//        }
+//        double distance = Math.sqrt(Math.pow(closeX - circleX, 2) + Math.pow(closeY - circleY, 2));
+//        Pair<Boolean, Integer> pair = new Pair((distance < circleRadius), side);
+//        return pair;
+//    }
 
 
 

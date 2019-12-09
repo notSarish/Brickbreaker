@@ -30,6 +30,7 @@ public class MainThread extends Thread {
         long totalTime = 0;
         long targetTime = 1000/MAX_FPS;
         while (running) {
+            System.out.println("Running");
             startTime = System.nanoTime();
             canvas = null;
 

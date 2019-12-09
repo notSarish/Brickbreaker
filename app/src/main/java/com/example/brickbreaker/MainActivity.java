@@ -32,10 +32,9 @@ public class MainActivity extends Activity {
         drawView = new DrawView(this);
         drawView.setBackgroundColor(Color.WHITE);
         setContentView(drawView);
-
-
-
     }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -43,9 +42,10 @@ public class MainActivity extends Activity {
         float y = event.getY();
         //what happens if you touch the first button
         if (x >= 0 && x <= 1500 && y >= 200 && y <= 350) {
-          //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-           // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(new GamePanel(this));
+            drawView.setVisibility(View.GONE);
             return true;
         }
         //what happens if you touch the second button
