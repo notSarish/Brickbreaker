@@ -13,6 +13,9 @@ public class Paddle implements GameObject {
     public int x;
     public int y;
 
+    private int dx;
+    final private int maxdx = 10;
+
     public Paddle(Rect rectangle, int color) {
         this.paddle = rectangle;
         this.color = color;

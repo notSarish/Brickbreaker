@@ -27,8 +27,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int circleRadius;
     private int circleXpos;
     private int circleYpos;
-    private int dx;
-    private int dy;
+    private double dx;
+    private double dy;
 
     private int leftBound;
     private int rightBound;
@@ -38,7 +38,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int paddleXpos;
     final private int paddleYpos = 1500;
 
+
+    private ArrayList<ArrayList<Brick>> levels;
     private ArrayList<Brick> currentLevel;
+    private int levelIndex;
 
     public GamePanel(Context context) {
         super(context);
@@ -52,13 +55,48 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         bottomBound = size.y;
         getHolder().addCallback(this);
 
-        int[][] toRender = {
-                {0, 0, 0, 0},
+        levels = new ArrayList<ArrayList<Brick>>();
+
+        int[][] level1Render = {
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {1, 1, 1, 1},
-                {0, 0, 0, 0}};
-        currentLevel = (new LevelMaker(toRender)).level;
+                {0, 0, 0, 0},
+                {1, 1, 1, 1}};
+        ArrayList<Brick> level1 = (new LevelMaker(level1Render)).level;
+        levels.add(level1);
+
+        int[][] level2Render = {
+                {1, 1, 1, 1},
+                {0, 0, 0, 0},
+                {1, 1, 1, 1},
+                {0, 0, 0, 0},
+                {1, 1, 1, 1}};
+        ArrayList<Brick> level2 = (new LevelMaker(level2Render)).level;
+        levels.add(level2);
+
+        int[][] level3Render = {
+                {2, 2, 2, 2},
+                {2, 0, 0, 2},
+                {2, 0, 0, 2},
+                {2, 0, 0, 2},
+                {2, 0, 0, 2}};
+        ArrayList<Brick> level3 = (new LevelMaker(level3Render)).level;
+        levels.add(level3);
+
+        int[][] level4Render = {
+                {1, 1, 1, 1},
+                {1, 3, 3, 1},
+                {1, 3, 3, 1},
+                {1, 3, 3, 1},
+                {1, 1, 1, 1}};
+        ArrayList<Brick> level4 = (new LevelMaker(level4Render)).level;
+        levels.add(level4);
+
+
+
+        levelIndex = 0;
+        currentLevel = levels.get(levelIndex);
 
         thread = new MainThread(getHolder(), this);
 
@@ -67,8 +105,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         circleRadius = 35;
         circleXpos = rightBound/2;
         circleYpos = 1000;
-        dx = 7;
-        dy = 7;
+        dx = 0.0;
+        dy = 7.0;
 
         setFocusable(true);
 
@@ -105,7 +143,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_BUTTON_PRESS:
             case MotionEvent.ACTION_MOVE:
                 movePlayer(event);
 
@@ -121,9 +159,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             paddleXpos = (int) event.getX();
         }
-
         playerPoint.set(paddleXpos, paddleYpos);
-//        playerPoint.set((int) event.getX(), 1500);
     }
 
     public void update() {
@@ -151,9 +187,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         Boolean collision = collisionResults.first;
         Integer side = collisionResults.second;
         if (collision && side > 0) {
-//            System.out.println(side);
+            System.out.println(side);
             if (side == 1 || side == 3) {
                 dy *= -1;
+                int difference = circleXpos - player.x;
+                double paddleDX = 120/difference;
+                paddleDX *= (Math.random() + 1);
+                dx += paddleDX;
+                System.out.println("C: " + circleXpos + " P: " + player.x);
+                System.out.println(difference);
             } else if (side == 2 || side == 4) {
                 dx *= -1;
             } else {
@@ -162,8 +204,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         if (checkIfCleared()) {
-            dx = 0;
-            dy = 0;
+            levelIndex++;
+            currentLevel = levels.get(levelIndex);
+            circleXpos = rightBound/2;
+            circleYpos = 1000;
         } else {
             renderGrid(canvas);
         }
@@ -188,12 +232,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void renderGrid(Canvas canvas) {
-        System.out.println("Frame Start");
+//        System.out.println("Frame Start");
         for (int n = 0; n < currentLevel.size(); n++) {
             Brick current = currentLevel.get(n);
             Pair<Boolean, Integer> collisionResults = boxCircleCollision(current.x, current.y, current.getWidth(), current.getHeight(), circleXpos, circleYpos, circleRadius);
-            System.out.println(collisionResults);
-            System.out.println("W: " + current.getWidth() + " H: " + current.getHeight());
+//            System.out.println(collisionResults);
+//            System.out.println("W: " + current.getWidth() + " H: " + current.getHeight());
             Boolean collision = collisionResults.first;
             Integer side = collisionResults.second;
             if (collision && side > 0 && current.getLife() > 0) {
@@ -232,60 +276,5 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         double corner = Math.pow((cx - boxWidth/2), 2) + Math.pow((cy - boxHeight/2), 2);
         return new Pair(corner < (circleRadius^2), 5);
-
-//        if (circleX < boxX) {
-//            closeX = boxX;
-//            side = 4;
-//        } else if (circleX > boxX + boxWidth) {
-//            closeX = boxX + boxWidth;
-//
-//        int closeX = circleX;
-//        int closeY = circleY;
-//        Integer side = -1;side = 2;
-//        }
-//        if (circleY < boxY) {
-//            closeY = boxY;
-//            side = 1;
-//        } else if (circleY > boxY + boxHeight) {
-//            closeY = boxY + boxHeight;
-//            side = 3;
-//        }
-
-//        if (circleY < boxY) {
-//            closeY = boxY;
-//            side = 1;
-//        } else if (circleY > boxY + boxHeight) {
-//            closeY = boxY + boxHeight;
-//            side = 3;
-//        }
-//        if (circleX > boxX + boxWidth) {
-//            closeX = boxX + boxWidth;
-//            side = 2;
-//        } else if (circleX < boxX) {
-//            closeX = boxX;
-//            side = 4;
-//        }
-////        if (closeX == boxX && closeY == boxY || closeX == boxX + boxWidth && closeY == boxY || closeX == boxX && closeY == boxY + boxHeight || closeX == boxX + boxWidth && closeY == boxY + boxHeight) {
-////            side = 5;
-////        }
-//        float distX = circleX - closeX;
-//        float distY = circleY - closeY;
-//        double distance = Math.sqrt((distX * distY) + (distY * distY));
-//        Pair<Boolean, Integer> pair = new Pair((distance < circleRadius), side);
-//        return pair;
-
     }
-
-    private double clamp(double min, double max, double value) {
-        if (value < min) {
-            return min;
-        } else if (value > min) {
-            return max;
-        } else {
-            return value;
-        }
-    }
-
-
-
 }
