@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.fonts.Font;
 import android.util.Pair;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -46,6 +47,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<ArrayList<Brick>> levels;
     private ArrayList<Brick> currentLevel;
     private int levelIndex;
+
 
     public GamePanel(Context context) {
         super(context);
@@ -105,6 +107,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         currentLevel = levels.get(levelIndex);
 
         thread = new MainThread(getHolder(), this);
+
+        gameRunning = true;
 
         player = new Paddle(new Rect(100, 100, 350, 120), Color.rgb(255, 0, 0));
         playerPoint = new Point(rightBound/2, 1500);
@@ -227,8 +231,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             circleRadius = 0;
             dx = 0;
             dy = 0;
-            player = new Paddle(new Rect(100, 100, 350, 120), Color.rgb(255, 0, 0));
-            playerPoint = new Point(rightBound/2, 1500);
+
+            /*
+            Write code to handle going back to main menu here.
+            Include game over text and back button.
+            */
+
         }
         if (checkIfCleared()) {
             levelIndex++;
@@ -237,12 +245,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             circleYpos = 1000;
             player = new Paddle(new Rect(100, 100, 350, 120), Color.rgb(255, 0, 0));
             playerPoint = new Point(rightBound/2, 1500);
+            player.update();
         } else {
             renderGrid(canvas);
         }
         circleXpos += dx;
         circleYpos += dy;
         canvas.drawCircle(circleXpos, circleYpos, circleRadius, paint);
+
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(60);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        canvas.drawText("Lives: " + lives, 10, 1780, textPaint);
 
         player.draw(canvas);
     }
