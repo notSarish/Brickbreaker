@@ -38,6 +38,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int paddleXpos;
     final private int paddleYpos = 1500;
 
+    private int lives;
+
+    private boolean gameRunning;
+
 
     private ArrayList<ArrayList<Brick>> levels;
     private ArrayList<Brick> currentLevel;
@@ -54,6 +58,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         topBound = 0;
         bottomBound = size.y;
         getHolder().addCallback(this);
+
+        lives = 3;
 
         levels = new ArrayList<ArrayList<Brick>>();
 
@@ -145,8 +151,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction()) {
             case MotionEvent.ACTION_BUTTON_PRESS:
             case MotionEvent.ACTION_MOVE:
-                movePlayer(event);
-
+                if (gameRunning) {
+                    movePlayer(event);
+                }
         }
         return true;
     }
@@ -182,7 +189,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             dy *= -1;
         }
         Pair<Boolean, Integer> collisionResults = boxCircleCollision(player.x, player.y, player.getWidth(), player.getHeight(), circleXpos, circleYpos, circleRadius);
-//        System.out.println("Top: " + player.getTop() + " Right: " + player.getRight() + " Bottom: " + player.getBottom() + " Left: " + player.getLeft());
+//        System3.out.println("Top: " + player.getTop() + " Right: " + player.getRight() + " Bottom: " + player.getBottom() + " Left: " + player.getLeft());
 //        System.out.println("X: " + circleXpos + "  Y: " + circleYpos);
         Boolean collision = collisionResults.first;
         Integer side = collisionResults.second;
@@ -191,8 +198,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (side == 1 || side == 3) {
                 dy *= -1;
                 int difference = circleXpos - player.x;
-                double paddleDX = 120/difference;
-                paddleDX *= (Math.random() + 1);
+                double paddleDX;
+                if (difference == 0) {
+                    paddleDX = 0;
+                } else {
+                    paddleDX = 120/difference;
+                    paddleDX *= (Math.random() + 1);
+                }
                 dx += paddleDX;
                 System.out.println("C: " + circleXpos + " P: " + player.x);
                 System.out.println(difference);
@@ -203,21 +215,34 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 dy += -1;
             }
         }
+        if (circleYpos + circleRadius > 1500 + player.getHeight()/2) {
+            lives--;
+            circleXpos = rightBound/2;
+            circleYpos = 1000;
+            dx = 0;
+            dy = 10;
+        }
+        if (lives == 0) {
+            gameRunning = false;
+            circleRadius = 0;
+            dx = 0;
+            dy = 0;
+            player = new Paddle(new Rect(100, 100, 350, 120), Color.rgb(255, 0, 0));
+            playerPoint = new Point(rightBound/2, 1500);
+        }
         if (checkIfCleared()) {
             levelIndex++;
             currentLevel = levels.get(levelIndex);
             circleXpos = rightBound/2;
             circleYpos = 1000;
+            player = new Paddle(new Rect(100, 100, 350, 120), Color.rgb(255, 0, 0));
+            playerPoint = new Point(rightBound/2, 1500);
         } else {
             renderGrid(canvas);
         }
-
-//        System.out.println("X: " + circleXpos + " Y: " + circleYpos + " dx: " + dx + " dy: " + dy);
         circleXpos += dx;
         circleYpos += dy;
         canvas.drawCircle(circleXpos, circleYpos, circleRadius, paint);
-
-
 
         player.draw(canvas);
     }
@@ -258,10 +283,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public Pair<Boolean, Integer> boxCircleCollision(int boxX, int boxY, int boxWidth, int boxHeight, int circleX, int circleY, int circleRadius) {
-//        int closeX = circleX;
-//        int closeY = circleY;
-//        Integer side = -1;
-
         double cx = Math.abs(circleX - boxX);
         double cy = Math.abs(circleY - boxY);
 
@@ -276,5 +297,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         double corner = Math.pow((cx - boxWidth/2), 2) + Math.pow((cy - boxHeight/2), 2);
         return new Pair(corner < (circleRadius^2), 5);
+    }
+
+    public boolean getGameRunning() {
+        return gameRunning;
     }
 }
