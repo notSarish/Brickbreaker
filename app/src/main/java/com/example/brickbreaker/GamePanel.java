@@ -49,7 +49,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int levelIndex;
 
 
-    public GamePanel(Context context) {
+    public GamePanel(Context context, int[][] customRender) {
         super(context);
 
         Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
@@ -64,42 +64,47 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         lives = 3;
 
         levels = new ArrayList<ArrayList<Brick>>();
+        if (customRender.length == 0) {
+            int[][] level1Render = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 1}};
+            ArrayList<Brick> level1 = (new LevelMaker(level1Render)).level;
+            levels.add(level1);
 
-        int[][] level1Render = {
-                {0, 0, 0, 0},
-                {0, 0, 0, 0},
-                {1, 1, 1, 1},
-                {0, 0, 0, 0},
-                {1, 1, 1, 1}};
-        ArrayList<Brick> level1 = (new LevelMaker(level1Render)).level;
-        levels.add(level1);
+            int[][] level2Render = {
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 1}};
+            ArrayList<Brick> level2 = (new LevelMaker(level2Render)).level;
+            levels.add(level2);
 
-        int[][] level2Render = {
-                {1, 1, 1, 1},
-                {0, 0, 0, 0},
-                {1, 1, 1, 1},
-                {0, 0, 0, 0},
-                {1, 1, 1, 1}};
-        ArrayList<Brick> level2 = (new LevelMaker(level2Render)).level;
-        levels.add(level2);
+            int[][] level3Render = {
+                    {2, 2, 2, 2},
+                    {2, 0, 0, 2},
+                    {2, 0, 0, 2},
+                    {2, 0, 0, 2},
+                    {2, 0, 0, 2}};
+            ArrayList<Brick> level3 = (new LevelMaker(level3Render)).level;
+            levels.add(level3);
 
-        int[][] level3Render = {
-                {2, 2, 2, 2},
-                {2, 0, 0, 2},
-                {2, 0, 0, 2},
-                {2, 0, 0, 2},
-                {2, 0, 0, 2}};
-        ArrayList<Brick> level3 = (new LevelMaker(level3Render)).level;
-        levels.add(level3);
+            int[][] level4Render = {
+                    {1, 1, 1, 1},
+                    {1, 3, 3, 1},
+                    {1, 3, 3, 1},
+                    {1, 3, 3, 1},
+                    {1, 1, 1, 1}};
+            ArrayList<Brick> level4 = (new LevelMaker(level4Render)).level;
+            levels.add(level4);
+        } else {
+            ArrayList<Brick> customLevel = (new LevelMaker(customRender)).level;
+            levels.add(customLevel);
+        }
 
-        int[][] level4Render = {
-                {1, 1, 1, 1},
-                {1, 3, 3, 1},
-                {1, 3, 3, 1},
-                {1, 3, 3, 1},
-                {1, 1, 1, 1}};
-        ArrayList<Brick> level4 = (new LevelMaker(level4Render)).level;
-        levels.add(level4);
 
 
 
@@ -174,7 +179,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-//        System.out.println("X: " + paddleXpos + " Y: " + (player.getTop() - player.getBottom())/2);
         player.update(playerPoint);
     }
 
@@ -184,8 +188,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         Paint paint = new Paint();
         paint.setColor(Color.rgb(255, 0, 0));
         canvas.drawColor(Color.WHITE);
-//        System.out.println("Top: " + topBound + "  Bottom: " + bottomBound);
-//        System.out.println("FUCK: " + circleRadius + " THIS: " + circleYpos);
         if (circleXpos + circleRadius >= rightBound || circleXpos - circleRadius <= leftBound) {
             dx *= -1;
         }
@@ -193,8 +195,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             dy *= -1;
         }
         Pair<Boolean, Integer> collisionResults = boxCircleCollision(player.x, player.y, player.getWidth(), player.getHeight(), circleXpos, circleYpos, circleRadius);
-//        System3.out.println("Top: " + player.getTop() + " Right: " + player.getRight() + " Bottom: " + player.getBottom() + " Left: " + player.getLeft());
-//        System.out.println("X: " + circleXpos + "  Y: " + circleYpos);
         Boolean collision = collisionResults.first;
         Integer side = collisionResults.second;
         if (collision && side > 0) {
@@ -236,7 +236,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             Write code to handle going back to main menu here.
             Include game over text and back button.
             */
-
         }
         if (checkIfCleared()) {
             levelIndex++;
@@ -248,6 +247,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             player.update();
         } else {
             renderGrid(canvas);
+        }
+        if (levelIndex - 1 == levels.size()) {
+            // You win
+            // Write code to handle going back to main menu here,
+            // Include you win text and back button.
         }
         circleXpos += dx;
         circleYpos += dy;
