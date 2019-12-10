@@ -76,10 +76,17 @@ public class MainActivity extends Activity {
                 if (y >= 1400) {
 
                     //drawViewFake = new DrawViewFake(this);
-                    weInCustomMake = false;
-                    drawview2 = new drawView2(this, a, false);
+                   // weInCustomMake = false;
+                    //drawview2 = new drawView2(this, a, false);
                     //drawview2.changeCondition();
-                    setContentView(drawview2);
+                    int [][] array = new int[a.length][a[1].length];
+                    for (int i = 0; i < a.length; i++) {
+                        for (int j = 0; j < a[i].length; j++) {
+                            array[i][j] = a[i][j].getColor();
+                        }
+                    }
+                    GamePanel gamePanel1 = new GamePanel(this, array);
+                    setContentView(gamePanel1);
                     //drawview2 = null;
                     //drawview2.setVisibility(View.GONE);
                 }
