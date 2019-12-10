@@ -13,8 +13,12 @@ public class Bricks {
     public int getColor() {
         return color;
     }
-    public void setColor(int a) {
-        color = a;
+    public void incrementColor() {
+        if (color == 3) {
+            color = 0;
+        } else {
+            color++;
+        }
     }
     public Rect getRect() {
         return rect;

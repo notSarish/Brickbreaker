@@ -49,8 +49,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int levelIndex;
 
 
-    public GamePanel(Context context, int[][] customRender) {
+    public GamePanel(Context context) {
         super(context);
+        int[][] customRender = {{}};
 
         Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -64,7 +65,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         lives = 3;
 
         levels = new ArrayList<ArrayList<Brick>>();
-        if (customRender.length == 0) {
+        if (customRender[0].length == 0) {
             int[][] level1Render = {
                     {0, 0, 0, 0},
                     {0, 0, 0, 0},
@@ -231,7 +232,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             circleRadius = 0;
             dx = 0;
             dy = 0;
-
             /*
             Write code to handle going back to main menu here.
             Include game over text and back button.

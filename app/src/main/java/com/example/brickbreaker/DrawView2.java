@@ -7,23 +7,31 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
 
-import static com.example.myapplication.MainThread.canvas;
-import static java.lang.String.valueOf;
 
-public class drawView2 extends View {
+public class DrawView2 extends View {
     private Paint paint = new Paint();
     private Bricks[][] rectss;
 
-    public drawView2(Context context, Bricks[][] rects) {
+    public DrawView2(Context context, Bricks[][] rects) {
         super(context);
+        int color;
         for (int i = 0; i < rects.length; i++) {
             for (int j = 0; j < rects[i].length; j++) {
-                rects[i][j] = new Bricks(new Rect(270*j, i*175 , 270*(j+1), (i + 1)*175), 0);
+                if (rects[i][j] == null) {
+                    color = 0;
+                } else {
+                    color = rects[i][j].getColor();
+                }
+                rects[i][j] = new Bricks(new Rect(270*j, i*175 , 270*(j+1), (i + 1)*175), color);
             }
         }
         rectss = rects;
+
     }
-//right: 1080
+    public Bricks[][] getRectss() {
+        return rectss;
+    }
+    //right: 1080
     //height is 1794
     @Override
     public void onDraw(Canvas canvas) {
@@ -31,14 +39,14 @@ public class drawView2 extends View {
             for (int j = 0; j < rectss[i].length; j++) {
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(Color.WHITE);
-                if (rectss[i][j].getColor() % 3 == 0) {
+                if (rectss[i][j].getColor() == 0) {
                     paint.setColor(Color.rgb(247, 247, 247));
                     //223 227 238
                     //139 157 195
                     //59 89 152
-                } else if (rectss[i][j].getColor() % 3 == 1) {
+                } else if (rectss[i][j].getColor() == 1) {
                     paint.setColor(Color.rgb(223, 227, 238));
-                } else if (rectss[i][j].getColor() % 3 == 2) {
+                } else if (rectss[i][j].getColor() == 2) {
                     paint.setColor(Color.rgb(139, 157, 195));
                 } else {
                     paint.setColor(Color.rgb(59,89,152));

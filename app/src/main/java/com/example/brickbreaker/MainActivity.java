@@ -27,12 +27,14 @@ public class MainActivity extends Activity {
     private Canvas canvas = new Canvas();
     private Color color = new Color();
     DrawView drawView;
-    drawView2 drawview2;
+    DrawView2 drawview2;
     GamePanel b; //= new GamePanel(this);
     boolean isItPlaying = false;
     boolean weInCustomMake = false;
     boolean inNormalMode = false;
     Bricks[][] a;
+
+    GamePanel panel;
 
 
     @Override
@@ -78,45 +80,59 @@ public class MainActivity extends Activity {
         }
 
 
-*/      if (weInCustomMake && !inNormalMode) { //&& x >= 0 && x<=1500 && y >= 0 && y <= 875) {
-            //keep adding 1 to the color for each touch
-            //badda bing
 
-            int xordinate = (int) x/270;
-            int yCoordinate = (int) y/175;
-            //if (x < 4 && y < 5) {
+*/
+       System.out.println("aijsdufhasd");
+       if (event.getAction() == MotionEvent.ACTION_DOWN){
+           System.out.println("Click registered");
+           if (weInCustomMake && !inNormalMode) { //&& x >= 0 && x<=1500 && y >= 0 && y <= 875) {
+               //keep adding 1 to the color for each touch
+               //badda bing
+               System.out.println("In custom mode");
+               int xCoordinate = (int) x/270;
+               int yCoordinate = (int) y/175;
+               System.out.println("X: " + xCoordinate + " Y:" + yCoordinate);
+               System.out.println("BEFORE: ");
+               if (xCoordinate < 4 && yCoordinate < 5) {
+                   a[yCoordinate][xCoordinate].incrementColor();
+               }
 
-            int col = a[xordinate][yCoordinate].getColor();
-            a[xordinate][yCoordinate].setColor(col);
-            //}
-            drawview2 = new drawView2(this, a);
-            setContentView(drawview2);
-            return true;
-            //have a back statement to get out
-        }
-        if (!weInCustomMake && drawView.getVisibility() != View.GONE && !inNormalMode && x >= 0 && x <= 1500 && y >= 550 && y <= 700) {
-            //setContentView to the make your own design page
-            a = new Bricks[5][4];
-            drawview2 = new drawView2(this, a);
-            setContentView(drawview2);
-            drawView.setVisibility(View.GONE);
-            weInCustomMake = true;
+               drawview2 = new DrawView2(this, a);
 
-            return true;
-        }
-        
-        //
-        if (!weInCustomMake && drawView.getVisibility() != View.GONE && x >= 0 && x <= 1500 && y >= 200 && y <= 350) {
+               setContentView(drawview2);
+               return true;
+               //have a back statement to get out
+           }
+           if (!weInCustomMake && drawView.getVisibility() != View.GONE && !inNormalMode && x >= 0 && x <= 1500 && y >= 550 && y <= 700) {
+               //setContentView to the make your own design page
+               System.out.println("Entering custom mode");
+               a = new Bricks[5][4];
 
+               drawview2 = new DrawView2(this, a);
+               setContentView(drawview2);
+               drawView.setVisibility(View.GONE);
+               weInCustomMake = true;
 
-            setContentView(new GamePanel(this));
-            drawView.setVisibility(View.GONE);
-            inNormalMode = true;
+               return true;
+           }
 
-            return true;
-        }
+           if (!weInCustomMake && drawView.getVisibility() != View.GONE && x >= 0 && x <= 1500 && y >= 200 && y <= 350) {
 
-        return false;
+               System.out.println("Entering normal mode");
+               panel = new GamePanel(this);
+               System.out.println(panel.getGameRunning());
+               setContentView(panel);
+               drawView.setVisibility(View.GONE);
+               inNormalMode = true;
+
+               return true;
+           }
+           if (inNormalMode) {
+               System.out.println("In normal mode");
+               System.out.println(panel.getGameRunning());
+           }
+       }
+       return false;
     }
 
 
