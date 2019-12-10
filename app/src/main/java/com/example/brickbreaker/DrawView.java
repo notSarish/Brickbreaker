@@ -21,6 +21,7 @@ public class DrawView extends View {
     public DrawView(Context context) {
         super(context);
     }
+
     @Override
     public void onDraw(Canvas canvas) {
         //title
@@ -48,7 +49,7 @@ public class DrawView extends View {
         canvas.drawText("Play Normal Mode", 300, 300, paint);
 
         //second button
-        paint2.setStyle(Paint.Style.FILL);
+        /*paint2.setStyle(Paint.Style.FILL);
         paint2.setColor(Color.WHITE);
         canvas.drawRect(rect2, paint2);
         paint2.setStyle(Paint.Style.STROKE);
@@ -56,7 +57,7 @@ public class DrawView extends View {
         canvas.drawRect(rect2, paint2);
         paint2.setTextSize(55);
         paint2.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawText("Play Your Own Design", 265, 475, paint2);
+        canvas.drawText("Play Your Own Design", 265, 475, paint2); */
 
         paint3.setStyle(Paint.Style.FILL);
         paint3.setColor(Color.WHITE);
@@ -66,7 +67,7 @@ public class DrawView extends View {
         canvas.drawRect(rect3, paint3);
         paint3.setTextSize(55);
         paint3.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawText("Make Your Own Design", 255, 650, paint3);
+        canvas.drawText("Play Your Own Design", 255, 650, paint3);
 
 
     }
